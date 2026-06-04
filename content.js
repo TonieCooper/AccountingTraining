@@ -1,0 +1,40 @@
+
+const CPA = (() => {
+  const sections = {
+    FAR:['Revenue Recognition','Leases','Bonds','Consolidations','Inventory','Cash Flows','Fair Value','Equity','Governmental','Not-for-Profit'],
+    AUD:['Audit Risk','Evidence','Internal Control','Sampling','Reports','Ethics','Planning','Substantive Testing','Review Engagements','SSARS'],
+    REG:['Individual Tax','Corporate Tax','Partnerships','S Corporations','Basis','Property Transactions','Ethics','Business Law','Tax Procedures','Gift/Estate'],
+    BAR:['Cost Accounting','Variance Analysis','Forecasting','Ratios','Technical Accounting','Governmental Analysis','Budgeting','Performance Management'],
+    ISC:['IT Controls','Cybersecurity','SOC Reports','Data Governance','Change Management','Access Controls','System Availability','Privacy'],
+    TCP:['Entity Planning','Advanced Basis','Tax Credits','Loss Limitations','Retirement Planning','International Tax','Multi-jurisdiction','Transactions']
+  };
+  const lessons = [];
+  Object.entries(sections).forEach(([sec,topics])=>topics.forEach((topic,i)=>{
+    lessons.push({section:sec, topic, title:`${sec}: ${topic} Masterclass`, minutes:18+i%7, level:i%3?'Exam Ready':'Foundation', body:[
+      `${topic} is a high-value ${sec} topic because CPA candidates must connect rules, professional judgment, calculations, and reporting consequences under time pressure.`,
+      `Commercial-prep approach: first identify the fact pattern, then determine the tested rule, then calculate or evaluate, then eliminate distractors that are technically true but not responsive to the requirement.`,
+      `Exam trap: questions often add extra facts to distract from the core issue. Write the requirement in your own words before solving.`,
+      `CPA-level procedure: document assumptions, cite the relevant concept, perform the calculation or control evaluation, and conclude with the financial statement, audit, or tax effect.`,
+      `Practice drill: create one multiple-choice question, one journal entry or tax calculation, and one task-based simulation workpaper for ${topic}.`
+    ], takeaways:[`Define the tested ${topic} rule`,`Apply the rule to a short scenario`,`Recognize common distractors`,`Explain the CPA-level conclusion`], examples:[`Mini case: A client presents a ${topic.toLowerCase()} issue with incomplete documentation. Identify what evidence is needed before conclusion.`,`Exam move: compare two answer choices and reject the one that answers a different assertion or tax year.`]});
+  }));
+  const flashcards=[];
+  const stems=['Define','Explain the exam treatment for','What is the primary risk in','Which assertion is most relevant to','What is a common CPA exam trap involving','How should a candidate approach','What documentation supports','When is professional judgment most important for','What is the financial statement impact of','What calculation is commonly tested for'];
+  Object.entries(sections).forEach(([sec,topics])=>topics.forEach(topic=>stems.forEach((stem,idx)=>{
+    flashcards.push({section:sec,topic,difficulty:['Foundation','Application','Exam Trap','Simulation'][idx%4],front:`${stem} ${topic}?`,back:`${sec} answer: For ${topic}, identify the tested requirement, apply the authoritative concept, document assumptions, and connect the conclusion to recognition, measurement, presentation, disclosure, audit evidence, or tax reporting as applicable.`, mastery:0});
+  })));
+  while(flashcards.length<1800){const base=flashcards[flashcards.length%Object.keys(sections).flatMap(k=>sections[k].map(t=>[k,t])).length]; flashcards.push({...base,front:base.front.replace('?','')+` — rapid review variant ${flashcards.length+1}?`,back:base.back+` Rapid review: state the rule, compute if needed, and conclude in one sentence.`});}
+  const questions=[];
+  const opts={FAR:['Recognize over time when criteria are met','Ignore disclosure requirements','Record all revenue at contract signing','Use tax basis for GAAP reporting'],AUD:['Obtain reliable evidence linked to assertions','Accept management explanation only','Skip planning when risk is low','Use prior-year workpapers as current evidence'],REG:['Compute amount realized less adjusted basis','Report book income as taxable income without adjustments','Ignore holding period','Deduct all personal expenditures'],BAR:['Analyze trend, variance, and business driver','Use one ratio without context','Ignore forecast assumptions','Treat budget and actual as identical'],ISC:['Evaluate access, change, and security controls','Rely only on verbal IT explanations','Disable audit logs','Grant all users administrator access'],TCP:['Plan entity and transaction tax consequences','Ignore basis and loss limitations','Assume all gains are ordinary','Apply one tax rate to every transaction']};
+  Object.entries(sections).forEach(([sec,topics])=>topics.forEach((topic,ti)=>{for(let n=1;n<=16;n++) questions.push({section:sec,topic,difficulty:['Medium','Hard','Simulation Prep','Exam Trap'][n%4],question:`${sec} ${topic} Question ${n}: A CPA candidate is evaluating a client scenario involving ${topic.toLowerCase()}. Which response is most appropriate?`,options:[opts[sec][0],opts[sec][1],opts[sec][2],opts[sec][3]],correct:0,explanation:`Correct. The best CPA exam response for ${topic} is to apply the relevant rule to the requirement and support the conclusion with evidence, calculation, or reporting logic. Distractors usually overstate, ignore timing, or answer the wrong issue.`})}));
+  const simulations = [
+    {section:'FAR',title:'ASC 606 Multi-Element Contract',prompt:'A software company sells a three-year contract for implementation, license access, and support. Allocate consideration, identify performance obligations, and determine revenue timing.',solution:'Identify distinct goods/services, estimate standalone selling prices, allocate on relative SSP, recognize implementation based on transfer pattern, license depending on right-to-use/right-to-access facts, and support over time.'},
+    {section:'AUD',title:'Inventory Risk Workpaper',prompt:'Inventory rose 35%, gross margin fell, and cycle count variances increased. Identify risks, assertions, and audit procedures.',solution:'Risks include obsolete or overstated inventory and cutoff errors. Assertions include existence, valuation, completeness, and cutoff. Procedures include observation, test counts, price testing, aging review, cutoff testing, and analytical procedures.'},
+    {section:'REG',title:'Partnership Basis Analysis',prompt:'Partner contributes property with debt attached, receives distributions, and is allocated income/loss. Compute outside basis effects.',solution:'Start with contributed basis, increase for income and liability share, decrease for distributions and losses subject to limitations. Track at-risk and passive activity limitations separately when relevant.'},
+    {section:'BAR',title:'CFO Ratio Briefing',prompt:'Prepare a management analysis explaining lower current ratio, rising DSO, and unfavorable materials variance.',solution:'Connect liquidity, collections, working capital, pricing, purchasing, and production efficiency. Recommend follow-up: AR aging, credit policy review, inventory turnover, supplier pricing, and variance decomposition.'},
+    {section:'ISC',title:'SOC 1 Control Review',prompt:'Evaluate access provisioning and change management exceptions for a payroll processor.',solution:'Map controls to financial reporting risk, evaluate user access review, segregation of duties, approvals, testing evidence, remediation, and impact on control reliance.'},
+    {section:'TCP',title:'Entity Tax Planning Memo',prompt:'Compare S corporation and partnership treatment for owner compensation, basis, losses, and distributions.',solution:'Discuss reasonable compensation for S corp shareholder-employees, basis ordering, self-employment tax differences, distribution taxability, loss limitations, and planning tradeoffs.'}
+  ];
+  const exams = questions.slice(0,90).map((q,i)=>({...q,testlet:i<36?'MCQ Testlet 1':i<72?'MCQ Testlet 2':'Simulation Testlet'}));
+  return {sections,lessons,flashcards,questions,simulations,exams};
+})();
